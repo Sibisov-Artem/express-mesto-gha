@@ -21,7 +21,6 @@ const createUser = (req, res) => {
 };
 
 
-
 module.exports = {
   getUsers,
   getUserById,
