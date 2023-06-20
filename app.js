@@ -1,4 +1,5 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const userRoutes = require('./routes/users');
 
@@ -16,6 +17,7 @@ app.get('/', (req, res) => {
   res.send('проверка');
 });
 
+app.use(bodyParser.json());
 app.use(userRoutes);
 
 app.listen(PORT, () => {
