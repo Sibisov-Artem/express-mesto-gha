@@ -27,7 +27,17 @@ const updateUserById = (req, res) => {
   const { name, about } = req.body;
 
   User.findByIdAndUpdate(userId, { name, about })
-    .then(user => res.send({ data: user }))
+    .then((user) => res.send({ data: user }))
+    .catch((err) => res.status(500).send({ message: err.message }));
+};
+
+// PATCH /users/me/avatar — обновляет аватар
+const uploadAvatar = (req, res) => {
+  const userId = req.user._id;
+  const { avatar } = req.body;
+
+  User.findByIdAndUpdate(userId, { avatar })
+    .then((user) => res.send({ data: user }))
     .catch((err) => res.status(500).send({ message: err.message }));
 };
 
@@ -36,4 +46,5 @@ module.exports = {
   getUserById,
   createUser,
   updateUserById,
+  uploadAvatar,
 };
