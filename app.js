@@ -20,6 +20,13 @@ app.get('/', (req, res) => {
 app.use(bodyParser.json());
 app.use(userRoutes);
 
+app.use((req, res, next) => {
+  req.user = {
+    _id: '6491a3460cbd758690e8a17c',
+  };
+  next();
+});
+
 app.listen(PORT, () => {
   console.log(`Приложение слушает следующий порт: ${PORT}`);
 });
