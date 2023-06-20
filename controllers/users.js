@@ -21,8 +21,19 @@ const createUser = (req, res) => {
     .catch((err) => res.status(500).send({ message: err.message }));
 };
 
+// PATCH /users/me — обновляет профиль
+const updateUserById = (req, res) => {
+  const userId = req.user._id;
+  const { name, about } = req.body;
+
+  User.findByIdAndUpdate(userId, { name, about })
+    .then(user => res.send({ data: user }))
+    .catch((err) => res.status(500).send({ message: err.message }));
+};
+
 module.exports = {
   getUsers,
   getUserById,
   createUser,
+  updateUserById,
 };

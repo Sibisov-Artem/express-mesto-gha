@@ -12,7 +12,6 @@ mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
   console.log('connected to db');
 });
 
-
 const app = express();
 
 app.get('/', (req, res) => {
@@ -20,7 +19,6 @@ app.get('/', (req, res) => {
 });
 
 app.use(bodyParser.json());
-app.use(userRoutes);
 
 app.use((req, res, next) => {
   req.user = {
@@ -28,7 +26,7 @@ app.use((req, res, next) => {
   };
   next();
 });
-
+app.use(userRoutes);
 app.use(cardRoutes);
 
 app.listen(PORT, () => {
