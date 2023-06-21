@@ -1,8 +1,5 @@
 const User = require('../models/user');
-
-const ERROR_CODE = 400;
-const NOT_FOUND = 404;
-const ERROR_DEFAULT = 500;
+const { ERROR_CODE, NOT_FOUND, ERROR_DEFAULT } = require('../utils/errorStatus');
 
 const getUsers = (req, res) => {
   User.find({})
