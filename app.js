@@ -31,6 +31,11 @@ app.use(cardRoutes);
 app.get('*', (req, res) => {
   res.render('404');
 });
+app.use((req, res, next) => {
+  res.status(404).json({
+    message: 'Тут ничего нет'
+  })
+})
 
 app.listen(PORT, () => {
   console.log(`Приложение слушает следующий порт: ${PORT}`);
