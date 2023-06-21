@@ -6,6 +6,3 @@
     "object-curly-newline":"warn"
   }
 }
-
-// https://eslint.org/docs/latest/rules/no-underscore-dangle#options
-/*eslint no-underscore-dangle: ["error", { "allow": ["foo_", "_bar"] }]*/
