@@ -28,6 +28,9 @@ app.use((req, res, next) => {
 });
 app.use(userRoutes);
 app.use(cardRoutes);
+app.get('*', (req, res) => {
+  res.render('404');
+});
 
 app.listen(PORT, () => {
   console.log(`Приложение слушает следующий порт: ${PORT}`);
