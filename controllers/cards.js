@@ -16,8 +16,9 @@ const createCard = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные при создании карточки.' });
+      } else {
+        res.status(ERROR_DEFAULT).send({ message: 'Ошибка по умолчанию.' });
       }
-      res.status(ERROR_DEFAULT).send({ message: 'Ошибка по умолчанию.' });
     });
 };
 
@@ -27,14 +28,16 @@ const deleteCard = (req, res) => {
     .then((card) => {
       if (!card) {
         res.status(NOT_FOUND).send({ message: 'Карточка с указанным _id не найдена.' });
+        return;
       }
       res.send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(ERROR_CODE).send({ message: 'Удаление карточки с некорректным id.' });
+      } else {
+        res.status(ERROR_DEFAULT).send({ message: 'Ошибка по умолчанию.' });
       }
-      res.status(ERROR_DEFAULT).send({ message: 'Ошибка по умолчанию.' });
     });
 };
 
@@ -47,6 +50,7 @@ const likeCard = (req, res) => {
   ).then((card) => {
     if (!card) {
       res.status(NOT_FOUND).send({ message: 'Передан несуществующий _id карточки.' });
+      return;
     }
     res.send({ data: card });
   })
@@ -54,8 +58,9 @@ const likeCard = (req, res) => {
       console.log(err.name); // CastError
       if (err.name === 'CastError') {
         res.status(ERROR_CODE).send({ message: ' Переданы некорректные данные для постановки лайка.' });
+      } else {
+        res.status(ERROR_DEFAULT).send({ message: 'Ошибка по умолчанию.' });
       }
-      res.status(ERROR_DEFAULT).send({ message: 'Ошибка по умолчанию.' });
     });
 };
 
@@ -68,14 +73,16 @@ const dislikeCard = (req, res) => {
   ).then((card) => {
     if (!card) {
       res.status(NOT_FOUND).send({ message: 'Передан несуществующий _id карточки.' });
+      return;
     }
     res.send({ data: card });
   })
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(ERROR_CODE).send({ message: ' Переданы некорректные данные для снятии лайка.' });
+      } else {
+        res.status(ERROR_DEFAULT).send({ message: 'Ошибка по умолчанию.' });
       }
-      res.status(ERROR_DEFAULT).send({ message: 'Ошибка по умолчанию.' });
     });
 };
 
