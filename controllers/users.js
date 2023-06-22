@@ -2,7 +2,7 @@ const User = require('../models/user');
 const {
   ERROR_CODE,
   NOT_FOUND,
-  ERROR_DEFAULT
+  ERROR_DEFAULT,
 } = require('../utils/errorStatus');
 
 const getUsers = (req, res) => {

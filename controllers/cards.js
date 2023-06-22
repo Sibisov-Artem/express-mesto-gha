@@ -2,7 +2,7 @@ const Card = require('../models/card');
 const {
   ERROR_CODE,
   NOT_FOUND,
-  ERROR_DEFAULT
+  ERROR_DEFAULT,
 } = require('../utils/errorStatus');
 
 const getCards = (req, res) => {
