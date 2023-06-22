@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const userRoutes = require('./routes/users');
 const cardRoutes = require('./routes/cards');
 
+const { NOT_FOUND } = require('./utils/errorStatus');
 const { PORT = 3000 } = process.env;
 
 // mongoose.connect('mongodb://localhost:27017/mestodb');
@@ -28,11 +29,9 @@ app.use((req, res, next) => {
 });
 app.use(userRoutes);
 app.use(cardRoutes);
-app.get('*', (req, res) => {
-  res.render('404');
-});
+
 app.use((req, res) => {
-  res.status(404).json({ message: 'Тут ничего нет' });
+  res.status(NOT_FOUND).json({ message: 'Тут ничего нет' });
 });
 
 app.listen(PORT, () => {
