@@ -16,5 +16,7 @@
 `npm run start` — запускает сервер   
 `npm run dev` — запускает сервер с hot-reload
 
+`npm install` — установка всех пакетов/зависимостей согласно package.json
+
 **ссылка на репозиторий:**
 https://github.com/Sibisov-Artem/express-mesto-gha
