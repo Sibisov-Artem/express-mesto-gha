@@ -1,10 +1,12 @@
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
 const {
   ERROR_CODE,
   NOT_FOUND,
   ERROR_DEFAULT,
+  ERROR_AUTH,
 } = require('../utils/errorStatus');
 
 const getUsers = (req, res) => {
@@ -42,7 +44,7 @@ const createUser = (req, res) => {
   } = req.body;
 
   bcrypt.hash(password, 10)
-    .then(hash => User.create({
+    .then((hash) => User.create({
       name,
       about,
       avatar,
@@ -103,10 +105,38 @@ const uploadAvatar = (req, res) => {
     });
 };
 
+const login = (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    res.status(ERROR_CODE).send({ message: 'Не передан email или пароль' });
+    return;
+  }
+  User.findOne({ email })
+    .then((user) => {
+      if (!user) {
+        res.status(ERROR_AUTH).send({ message: 'Неправильные почта или пароль' });
+        return;
+      }
+      bcrypt.compare(password, user.password)
+        .then((matched) => {
+          if (!matched) {
+            res.status(ERROR_AUTH).send({ message: 'Неправильные почта или пароль' });
+            return;
+          }
+          const token = jwt.sign({ _id: user._id }, 'strong-secret-key', { expiresIn: '7d' });
+          res.send({ token });
+        });
+    })
+    .catch(() => {
+      res.status(ERROR_DEFAULT).send('Ошибка сервераж');
+    });
+};
+
 module.exports = {
   getUsers,
   getUserById,
   createUser,
   updateUserById,
   uploadAvatar,
+  login,
 };
