@@ -124,7 +124,10 @@ const login = (req, res) => {
             return;
           }
           const token = jwt.sign({ _id: user._id }, 'strong-secret-key', { expiresIn: '7d' });
-          res.send({ token });
+          res.cookie('jwt', token, {
+            httpOnly: true,
+          })
+            .end();
         });
     })
     .catch(() => {
