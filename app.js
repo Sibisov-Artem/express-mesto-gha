@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const userRoutes = require('./routes/users');
 const cardRoutes = require('./routes/cards');
+const { login, createUser } = require('./controllers/users');
 
 const { NOT_FOUND } = require('./utils/errorStatus');
 
@@ -30,6 +31,9 @@ app.use((req, res, next) => {
 });
 app.use(userRoutes);
 app.use(cardRoutes);
+
+app.post('/auth', login);
+app.post('/signup', createUser);
 
 app.use((req, res) => {
   res.status(NOT_FOUND).json({ message: 'Тут ничего нет' });
