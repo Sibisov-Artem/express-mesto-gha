@@ -135,6 +135,24 @@ const login = (req, res) => {
     });
 };
 
+const getCurrentUser = (req, res) => {
+  User.findById(req.user._id)
+    .then((user) => {
+      if (!user) {
+        res.status(NOT_FOUND).send({ message: 'Пользователь по указанному _id не найден.' });
+        return;
+      }
+      res.send({ data: user });
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(ERROR_CODE).send({ message: ' Некорректные данные.' });
+      } else {
+        res.status(ERROR_DEFAULT).send({ message: 'Ошибка по умолчанию.' });
+      }
+    });
+};
+
 module.exports = {
   getUsers,
   getUserById,
@@ -142,4 +160,5 @@ module.exports = {
   updateUserById,
   uploadAvatar,
   login,
+  getCurrentUser,
 };
