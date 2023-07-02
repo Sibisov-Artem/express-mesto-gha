@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const userRoutes = require('./routes/users');
 const cardRoutes = require('./routes/cards');
 const { login, createUser } = require('./controllers/users');
+const auth = require('./middlewares/auth');
 
 const { NOT_FOUND } = require('./utils/errorStatus');
 
@@ -29,11 +30,14 @@ app.use((req, res, next) => {
   };
   next();
 });
-app.use(userRoutes);
-app.use(cardRoutes);
 
 app.post('/auth', login);
 app.post('/signup', createUser);
+
+app.use(auth);
+
+app.use(userRoutes);
+app.use(cardRoutes);
 
 app.use((req, res) => {
   res.status(NOT_FOUND).json({ message: 'Тут ничего нет' });
