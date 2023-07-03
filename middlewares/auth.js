@@ -10,7 +10,8 @@ module.exports = (req, res, next) => {
   const { authorization } = req.headers;
   console.log(authorization);
 
-  if (!authorization || !authorization.startsWith('Bearer ')) {
+  if (!authorization) { // с "|| !authorization.startsWith('Bearer ')" выходим на ошибку...
+    //  уточнить, почему это происходит...
     res.status(ERROR_AUTH).send({ message: 'Необходима авторизация, нет authorization' });
     return;
   }
