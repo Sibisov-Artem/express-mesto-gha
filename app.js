@@ -24,13 +24,6 @@ app.get('/', (req, res) => {
 
 app.use(bodyParser.json());
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '64a2d2a71dfe3eb602df347f',
-  };
-  next();
-});
-
 app.post('/auth', login);
 app.post('/signup', createUser);
 
