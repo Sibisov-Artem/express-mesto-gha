@@ -3,6 +3,7 @@ const {
   ERROR_CODE,
   NOT_FOUND,
   ERROR_DEFAULT,
+  ERROR_LOCK,
 } = require('../utils/errorStatus');
 
 const getCards = (req, res) => {
@@ -27,21 +28,33 @@ const createCard = (req, res) => {
 };
 
 const deleteCard = (req, res) => {
-  console.log(req.body);
-  Card.findByIdAndRemove(req.params.cardId)
+  // console.log(req.params);
+  // console.log(req.body);
+  Card.findById(req.params.cardId)
     .then((card) => {
       if (!card) {
         res.status(NOT_FOUND).send({ message: 'Карточка с указанным _id не найдена.' });
         return;
       }
-      res.send({ data: card });
-    })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(ERROR_CODE).send({ message: 'Удаление карточки с некорректным id.' });
-      } else {
-        res.status(ERROR_DEFAULT).send({ message: 'Ошибка по умолчанию.' });
+      console.log(req.user._id);
+      console.log(card.owner._id);
+      console.log(card.owner._id.toString());
+      if (req.user._id !== card.owner._id.toString()) {
+        res.status(ERROR_LOCK).send({ message: 'Чужие карточки удалять нельяз' });
+        console.log('id не совпадают, чужое не трожь');
+        return;
       }
+      Card.findByIdAndRemove(req.params.cardId)
+        .then((cardDelete) => {
+          res.send({ data: cardDelete });
+        })
+        .catch((err) => {
+          if (err.name === 'CastError') {
+            res.status(ERROR_CODE).send({ message: 'Удаление карточки с некорректным id.' });
+          } else {
+            res.status(ERROR_DEFAULT).send({ message: 'Ошибка по умолчанию.' });
+          }
+        });
     });
 };
 
