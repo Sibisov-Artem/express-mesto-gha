@@ -8,9 +8,10 @@ const { ERROR_AUTH } = require('../utils/errorStatus');
 
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
+  console.log(authorization);
 
   if (!authorization || !authorization.startsWith('Bearer ')) {
-    res.status(ERROR_AUTH).send({ message: 'Необходима авторизация' });
+    res.status(ERROR_AUTH).send({ message: 'Необходима авторизация, нет authorization' });
     return;
   }
 
