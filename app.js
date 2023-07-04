@@ -5,6 +5,7 @@ const userRoutes = require('./routes/users');
 const cardRoutes = require('./routes/cards');
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
+const errorHandler = require('./middlewares/errorsHandler');
 
 const { NOT_FOUND } = require('./utils/errorStatus');
 
@@ -35,6 +36,8 @@ app.use(cardRoutes);
 app.use((req, res) => {
   res.status(NOT_FOUND).json({ message: 'Тут ничего нет' });
 });
+
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Приложение слушает следующий порт: ${PORT}`);
