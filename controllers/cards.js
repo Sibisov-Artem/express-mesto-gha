@@ -1,10 +1,4 @@
 const Card = require('../models/card');
-const {
-  ERROR_CODE, // 400
-  NOT_FOUND, // 404
-  ERROR_DEFAULT, // 500
-  ERROR_LOCK, // 423
-} = require('../utils/errorStatus');
 
 const BadRequestError = require('../utils/errors/BadRequestError'); // 400
 const NotFoundError = require('../utils/errors/NotFoundError'); // 404

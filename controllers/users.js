@@ -7,13 +7,6 @@ const NotFoundError = require('../utils/errors/NotFoundError'); // 404
 const UnauthorizedError = require('../utils/errors/UnauthorizedError'); // 401
 const ConflictError = require('../utils/errors/ConflictError'); // 409
 
-const {
-  ERROR_CODE, // 400
-  NOT_FOUND, //404
-  ERROR_DEFAULT, //500
-  ERROR_AUTH, //401
-} = require('../utils/errorStatus');
-
 const getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send({ data: users }))
@@ -24,7 +17,7 @@ const getUserById = (req, res, next) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
-        next(new NOT_FOUND('Пользователь по указанному _id не найден.'));
+        next(new NotFoundError('Пользователь по указанному _id не найден.'));
         return;
       }
       res.send({ data: user });
