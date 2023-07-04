@@ -14,7 +14,7 @@ router.post('/cards', celebrate({
   // валидируем тело запроса
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
-    link: Joi.string().required(),
+    link: Joi.string().required().regex(/https?:\/\/[\w\d\-._~:/?#[\]@!$&'()*+,;=]*/),
     // owner: Joi.string(),
   }).unknown(true),
 }), createCard);
