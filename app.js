@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const { celebrate, Joi } = require('celebrate');
 const userRoutes = require('./routes/users');
 const cardRoutes = require('./routes/cards');
 const { login, createUser } = require('./controllers/users');
@@ -25,8 +26,22 @@ app.get('/', (req, res) => {
 
 app.use(bodyParser.json());
 
-app.post('/auth', login);
-app.post('/signup', createUser);
+app.post('/auth', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().min(2).max(30),
+  }),
+}), login);
+
+app.post('/signup', celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
+    avatar: Joi.string(),
+    email: Joi.string().required().email(),
+    password: Joi.string().min(2).max(30),
+  }),
+}), createUser);
 
 app.use(auth);
 
