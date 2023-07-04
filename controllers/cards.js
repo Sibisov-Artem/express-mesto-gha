@@ -2,7 +2,7 @@ const Card = require('../models/card');
 
 const BadRequestError = require('../utils/errors/BadRequestError'); // 400
 const NotFoundError = require('../utils/errors/NotFoundError'); // 404
-const LockError = require('../utils/errors/LockError'); // 423
+const ForbiddenError = require('../utils/errors/ForbiddenError'); // 403
 
 const getCards = (req, res, next) => {
   Card.find({})
@@ -32,7 +32,7 @@ const deleteCard = (req, res, next) => {
         return;
       }
       if (req.user._id !== card.owner._id.toString()) {
-        next(new LockError('Чужие карточки удалять нельзя'));
+        next(new ForbiddenError('Чужие карточки удалять нельзя'));
         // console.log('id не совпадают, чужое не трожь');
         return;
       }
