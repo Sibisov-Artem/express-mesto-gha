@@ -29,7 +29,7 @@ app.use(bodyParser.json());
 app.post('/auth', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
-    password: Joi.string().min(2).max(30),
+    password: Joi.string().required(),
   }),
 }), login);
 
@@ -39,7 +39,7 @@ app.post('/signup', celebrate({
     about: Joi.string().min(2).max(30),
     avatar: Joi.string().regex(/https?:\/\/[\w\d\-._~:/?#[\]@!$&'()*+,;=]*/),
     email: Joi.string().required().email(),
-    password: Joi.string().min(2).max(30),
+    password: Joi.string().required(),
   }),
 }), createUser);
 
