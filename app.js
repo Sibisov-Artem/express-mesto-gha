@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const { celebrate, Joi } = require('celebrate');
+const { celebrate, Joi, errors } = require('celebrate');
 const userRoutes = require('./routes/users');
 const cardRoutes = require('./routes/cards');
 const { login, createUser } = require('./controllers/users');
@@ -52,6 +52,7 @@ app.use((req, res) => {
   res.status(NOT_FOUND).json({ message: 'Тут ничего нет' });
 });
 
+app.use(errors()); // обработчик ошибок celebrate
 app.use(errorHandler);
 
 app.listen(PORT, () => {
