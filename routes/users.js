@@ -37,7 +37,8 @@ router.patch('/users/me/avatar', celebrate({
     userId: Joi.string().alphanum().length(24),
   }),
   body: Joi.object().keys({
-    avatar: Joi.string(),
+    avatar: Joi.string().regex(/https?:\/\/[\w\d\-._~:/?#[\]@!$&'()*+,;=]*/),
+    // /https?:\/\/[\w\d\-\._~:\/?#\[\]@!$&'\(\)\*\+,;=]*/
   }),
 }), uploadAvatar);
 
