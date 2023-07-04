@@ -4,7 +4,7 @@
 // ресурсу. Если нет — возвращаем ошибку
 
 const jwt = require('jsonwebtoken');
-const { ERROR_AUTH } = require('../utils/errorStatus');
+const UnauthorizedError = require('../utils/errors/UnauthorizedError'); // 401
 
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
@@ -12,7 +12,7 @@ module.exports = (req, res, next) => {
 
   if (!authorization) { // с "|| !authorization.startsWith('Bearer ')" выходим на ошибку...
     //  уточнить, почему это происходит...
-    res.status(ERROR_AUTH).send({ message: 'Необходима авторизация, нет authorization' });
+    next(new UnauthorizedError('Необходима авторизация, нет authorization'));
     return;
   }
 
@@ -23,7 +23,7 @@ module.exports = (req, res, next) => {
     // верифицируем токен
     payload = jwt.verify(token, 'strong-secret-key');
   } catch (err) {
-    res.status(ERROR_AUTH).send({ message: 'Необходима авторизация' });
+    next(new UnauthorizedError('Необходима авторизация'));
     return;
   }
 
