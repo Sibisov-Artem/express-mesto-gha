@@ -111,7 +111,7 @@ const login = (req, res) => {
     res.status(ERROR_CODE).send({ message: 'Не передан email или пароль' });
     return;
   }
-  User.findOne({ email })
+  User.findOne({ email }).select('+password') // в объекте user добавляем хеш пароля
     .then((user) => {
       if (!user) {
         res.status(ERROR_AUTH).send({ message: 'Неправильные почта или пароль' });
