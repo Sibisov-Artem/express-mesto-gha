@@ -1,9 +1,9 @@
 const Card = require('../models/card');
 const {
-  ERROR_CODE,
-  NOT_FOUND,
-  ERROR_DEFAULT,
-  ERROR_LOCK,
+  ERROR_CODE, // 400
+  NOT_FOUND, // 404
+  ERROR_DEFAULT, // 500
+  ERROR_LOCK, // 423
 } = require('../utils/errorStatus');
 
 const getCards = (req, res) => {
