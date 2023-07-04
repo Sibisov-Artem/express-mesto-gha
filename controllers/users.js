@@ -2,38 +2,41 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
+const BadRequestError = require('../utils/errors/BadRequestError'); // 400
+const NotFoundError = require('../utils/errors/NotFoundError'); // 404
+const UnauthorizedError = require('../utils/errors/UnauthorizedError'); // 401
+
 const {
-  ERROR_CODE,
-  NOT_FOUND,
-  ERROR_DEFAULT,
-  ERROR_AUTH,
+  ERROR_CODE, // 400
+  NOT_FOUND, //404
+  ERROR_DEFAULT, //500
+  ERROR_AUTH, //401
 } = require('../utils/errorStatus');
 
-const getUsers = (req, res) => {
+const getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch(() => res.status(ERROR_DEFAULT).send({ message: 'Ошибка по умолчанию.' }));
+    .catch(next);
 };
 
-const getUserById = (req, res) => {
+const getUserById = (req, res, next) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
-        res.status(NOT_FOUND).send({ message: 'Пользователь по указанному _id не найден.' });
+        next(new NOT_FOUND('Пользователь по указанному _id не найден.'));
         return;
       }
       res.send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(ERROR_CODE).send({ message: ' Переданы некорректные данные.' });
-      } else {
-        res.status(ERROR_DEFAULT).send({ message: 'Ошибка по умолчанию.' });
+        next(new BadRequestError(' Переданы некорректные данные.'));
       }
-    });
+    })
+    .catch(next);
 };
 
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   console.log(req.body);
   const {
     name,
@@ -54,73 +57,70 @@ const createUser = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные при создании пользователя.' });
-      } else {
-        res.status(ERROR_DEFAULT).send({ message: 'Ошибка по умолчанию.' });
+        throw new BadRequestError('Переданы некорректные данные при создании пользователя.');
       }
-    });
+    })
+    .catch(next);
 };
 
 // PATCH /users/me — обновляет профиль
-const updateUserById = (req, res) => {
+const updateUserById = (req, res, next) => {
   const userId = req.user._id;
   const { name, about } = req.body;
 
   User.findByIdAndUpdate(userId, { name, about }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
-        res.status(NOT_FOUND).send({ message: ' Пользователь с указанным _id не найден.' });
+        next(new NotFoundError(' Пользователь с указанным _id не найден.'));
         return;
       }
       res.send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные при обновлении пользователя.' });
-      } else {
-        res.status(ERROR_DEFAULT).send({ message: 'Ошибка по умолчанию.' });
+        next(new BadRequestError('Переданы некорректные данные при обновлении пользователя.'));
       }
-    });
+    })
+    .catch(next);
 };
 
 // PATCH /users/me/avatar — обновляет аватар
-const uploadAvatar = (req, res) => {
+const uploadAvatar = (req, res, next) => {
   const userId = req.user._id;
   const { avatar } = req.body;
 
   User.findByIdAndUpdate(userId, { avatar }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
-        res.status(NOT_FOUND).send({ message: 'Пользователь с указанным _id не найден.' });
+        next(new NotFoundError('Пользователь с указанным _id не найден.'));
         return;
       }
       res.send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные при обновлении аватара.' });
-      } else {
-        res.status(ERROR_DEFAULT).send({ message: 'Ошибка по умолчанию.' });
+        next(new BadRequestError('Переданы некорректные данные при обновлении аватара.'));
       }
-    });
+    })
+    .catch(next);
 };
 
-const login = (req, res) => {
+const login = (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    res.status(ERROR_CODE).send({ message: 'Не передан email или пароль' });
+    next(new BadRequestError('Не передан email или пароль'));
     return;
   }
   User.findOne({ email }).select('+password') // в объекте user добавляем хеш пароля
     .then((user) => {
       if (!user) {
-        res.status(ERROR_AUTH).send({ message: 'Неправильные почта или пароль' });
+        next(new UnauthorizedError('Неправильные почта или пароль'));
         return;
       }
       bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            res.status(ERROR_AUTH).send({ message: 'Неправильные почта или пароль' });
+            next(new UnauthorizedError('Неправильные почта или пароль'));
             return;
           }
           const token = jwt.sign({ _id: user._id }, 'strong-secret-key', { expiresIn: '7d' });
@@ -130,27 +130,24 @@ const login = (req, res) => {
             .end();
         });
     })
-    .catch(() => {
-      res.status(ERROR_DEFAULT).send('Ошибка сервераж');
-    });
+    .catch(next);
 };
 
-const getCurrentUser = (req, res) => {
+const getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => {
       if (!user) {
-        res.status(NOT_FOUND).send({ message: 'Пользователь по указанному _id не найден.' });
+        next(new NotFoundError('Пользователь по указанному _id не найден.'));
         return;
       }
       res.send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(ERROR_CODE).send({ message: ' Некорректные данные.' });
-      } else {
-        res.status(ERROR_DEFAULT).send({ message: 'Ошибка по умолчанию.' });
+        next(new BadRequestError(' Некорректные данные.'));
       }
-    });
+    })
+    .catch(next);
 };
 
 module.exports = {
