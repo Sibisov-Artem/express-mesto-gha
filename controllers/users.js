@@ -5,6 +5,7 @@ const User = require('../models/user');
 const BadRequestError = require('../utils/errors/BadRequestError'); // 400
 const NotFoundError = require('../utils/errors/NotFoundError'); // 404
 const UnauthorizedError = require('../utils/errors/UnauthorizedError'); // 401
+const ConflictError = require('../utils/errors/ConflictError'); // 409
 
 const {
   ERROR_CODE, // 400
@@ -57,7 +58,10 @@ const createUser = (req, res, next) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new BadRequestError('Переданы некорректные данные при создании пользователя.');
+        next(new BadRequestError('Переданы некорректные данные при создании пользователя.'));
+      }
+      if (err.code === 11000) {
+        next(new ConflictError('Конфликт данных. Этот логин/email уже заняты'));
       }
     })
     .catch(next);
