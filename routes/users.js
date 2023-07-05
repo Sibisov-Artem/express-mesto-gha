@@ -12,11 +12,11 @@ const {
 
 const regularHttp = require('../utils/regularHttp');
 
-router.get('/users/me', getCurrentUser);
+router.get('/me', getCurrentUser);
 
-router.get('/users', getUsers);
+router.get('', getUsers);
 
-router.get('/users/:userId', celebrate({
+router.get('/:userId', celebrate({
   params: Joi.object().keys({
     userId: Joi.string().hex().length(24).required(),
   }),
@@ -24,14 +24,14 @@ router.get('/users/:userId', celebrate({
 
 // router.post('/users', createUser);
 
-router.patch('/users/me', celebrate({
+router.patch('/me', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30).required(),
     about: Joi.string().min(2).max(30).required(),
   }),
 }), updateUserById);
 
-router.patch('/users/me/avatar', celebrate({
+router.patch('/me/avatar', celebrate({
   params: Joi.object().keys({
     userId: Joi.string().hex().length(24).required(),
   }),
