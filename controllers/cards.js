@@ -28,15 +28,13 @@ const deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId)
     .then((card) => {
       if (!card) {
-        next(new NotFoundError('Карточка с указанным _id не найдена.'));
-        return;
+        return next(new NotFoundError('Карточка с указанным _id не найдена.'));
       }
       if (req.user._id !== card.owner._id.toString()) {
-        next(new ForbiddenError('Чужие карточки удалять нельзя'));
+        return next(new ForbiddenError('Чужие карточки удалять нельзя'));
         // console.log('id не совпадают, чужое не трожь');
-        return;
       }
-      Card.findByIdAndRemove(req.params.cardId)
+      return card.deleteOne()
         .then((cardDelete) => {
           res.send({ data: cardDelete });
         });
