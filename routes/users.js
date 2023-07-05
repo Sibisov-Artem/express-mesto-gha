@@ -16,7 +16,7 @@ router.get('/users', getUsers);
 
 router.get('/users/:userId', celebrate({
   params: Joi.object().keys({
-    userId: Joi.string().alphanum().length(24),
+    userId: Joi.string().hex().length(24).required(),
   }),
 }), getUserById);
 
@@ -24,7 +24,7 @@ router.get('/users/:userId', celebrate({
 
 router.patch('/users/me', celebrate({
   params: Joi.object().keys({
-    userId: Joi.string().alphanum().length(24),
+    userId: Joi.string().hex().length(24).required(),
   }),
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
@@ -34,7 +34,7 @@ router.patch('/users/me', celebrate({
 
 router.patch('/users/me/avatar', celebrate({
   params: Joi.object().keys({
-    userId: Joi.string().alphanum().length(24),
+    userId: Joi.string().hex().length(24).required(),
   }),
   body: Joi.object().keys({
     avatar: Joi.string().regex(/https?:\/\/[\w\d\-._~:/?#[\]@!$&'()*+,;=]*/),
