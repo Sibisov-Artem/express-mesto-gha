@@ -8,7 +8,7 @@ const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const errorHandler = require('./middlewares/errorsHandler');
 
-const { NOT_FOUND } = require('./utils/errorStatus');
+const NotFoundError = require('./utils/errors/NotFoundError');
 
 const regularHttp = require('./utils/regularHttp');
 
@@ -50,8 +50,8 @@ app.use(auth);
 app.use('/users', userRoutes);
 app.use('/cards', cardRoutes);
 
-app.use((req, res) => {
-  res.status(NOT_FOUND).json({ message: 'Тут ничего нет' });
+app.use((req, res, next) => {
+  next(new NotFoundError('Тут ничего нет'));
 });
 
 app.use(errors()); // обработчик ошибок celebrate
