@@ -22,7 +22,7 @@ const createCard = (req, res, next) => {
       } else {
         next(err);
       }
-    })
+    });
 };
 
 const deleteCard = (req, res, next) => {
@@ -46,7 +46,7 @@ const deleteCard = (req, res, next) => {
       } else {
         next(err);
       }
-    })
+    });
 };
 
 // PUT /cards/:cardId/likes — поставить лайк карточке
@@ -69,7 +69,7 @@ const likeCard = (req, res, next) => {
       } else {
         next(err);
       }
-    })
+    });
 };
 
 // DELETE /cards/:cardId/likes — убрать лайк с карточки
@@ -91,7 +91,7 @@ const dislikeCard = (req, res, next) => {
       } else {
         next(err);
       }
-    })
+    });
 };
 
 module.exports = {

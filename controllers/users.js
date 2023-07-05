@@ -28,7 +28,7 @@ const getUserById = (req, res, next) => {
       } else {
         next(err);
       }
-    })
+    });
 };
 
 const createUser = (req, res, next) => {
@@ -66,7 +66,7 @@ const createUser = (req, res, next) => {
       } else {
         next(err);
       }
-    })
+    });
 };
 
 // PATCH /users/me — обновляет профиль
@@ -88,7 +88,7 @@ const updateUserById = (req, res, next) => {
       } else {
         next(err);
       }
-    })
+    });
 };
 
 // PATCH /users/me/avatar — обновляет аватар
@@ -110,7 +110,7 @@ const uploadAvatar = (req, res, next) => {
       } else {
         next(err);
       }
-    })
+    });
 };
 
 const login = (req, res, next) => {

@@ -10,6 +10,8 @@ const {
   getCurrentUser,
 } = require('../controllers/users');
 
+const regularHttp = require('../utils/regularHttp');
+
 router.get('/users/me', getCurrentUser);
 
 router.get('/users', getUsers);
@@ -34,7 +36,7 @@ router.patch('/users/me/avatar', celebrate({
     userId: Joi.string().hex().length(24).required(),
   }),
   body: Joi.object().keys({
-    avatar: Joi.string().required().regex(/https?:\/\/[\w\d\-._~:/?#[\]@!$&'()*+,;=]*/),
+    avatar: Joi.string().required().regex(regularHttp),
     // /https?:\/\/[\w\d\-\._~:\/?#\[\]@!$&'\(\)\*\+,;=]*/
   }),
 }), uploadAvatar);

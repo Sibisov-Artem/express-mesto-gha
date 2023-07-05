@@ -10,6 +10,8 @@ const errorHandler = require('./middlewares/errorsHandler');
 
 const { NOT_FOUND } = require('./utils/errorStatus');
 
+const regularHttp = require('./utils/regularHttp');
+
 const { PORT = 3000 } = process.env;
 
 // mongoose.connect('mongodb://localhost:27017/mestodb');
@@ -37,7 +39,7 @@ app.post('/signup', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().regex(/https?:\/\/[\w\d\-._~:/?#[\]@!$&'()*+,;=]*/),
+    avatar: Joi.string().regex(regularHttp),
     email: Joi.string().required().email(),
     password: Joi.string().required(),
   }),

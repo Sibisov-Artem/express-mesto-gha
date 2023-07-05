@@ -8,13 +8,15 @@ const {
   dislikeCard,
 } = require('../controllers/cards');
 
+const regularHttp = require('../utils/regularHttp');
+
 router.get('/cards', getCards);
 
 router.post('/cards', celebrate({
   // валидируем тело запроса
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
-    link: Joi.string().required().regex(/https?:\/\/[\w\d\-._~:/?#[\]@!$&'()*+,;=]*/),
+    link: Joi.string().required().regex(regularHttp),
     // owner: Joi.string(),
   }).unknown(true),
 }), createCard);
