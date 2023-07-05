@@ -115,10 +115,6 @@ const uploadAvatar = (req, res, next) => {
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
-  if (!email || !password) {
-    next(new BadRequestError('Не передан email или пароль'));
-    return;
-  }
   User.findOne({ email }).select('+password') // в объекте user добавляем хеш пароля
     .then((user) => {
       if (!user) {
