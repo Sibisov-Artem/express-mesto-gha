@@ -32,9 +32,6 @@ router.patch('/me', celebrate({
 }), updateUserById);
 
 router.patch('/me/avatar', celebrate({
-  params: Joi.object().keys({
-    userId: Joi.string().hex().length(24),
-  }),
   body: Joi.object().keys({
     avatar: Joi.string().required().regex(regularHttp),
     // /https?:\/\/[\w\d\-\._~:\/?#\[\]@!$&'\(\)\*\+,;=]*/
